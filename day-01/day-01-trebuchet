@@ -22,29 +22,22 @@ if [ ! -f "$fichier" ]; then
 fi
 
 somme_total=0
-while IFS= read -r ligne; do
-	# Ça garde seulement les chiffres et élimine les \n
+while read ligne; do
+	# Ça garde seulement les chiffres sur plusieurs lignes
 	tous_chiffres=$(echo "$ligne" | grep -o '[0-9]')
 	nb_chiffres=$(echo "$ligne" | grep -o '[0-9]' | wc -l)
 
-	# 100 et plus, on doit retirer les chiffres du milieu
-	if [ "$nb_chiffres" -ge 3 ]; then
-		# On extraire le premier et dernier chiffre
-		premier=$(echo "$tous_chiffres" | head -n 1)
+	# À tous les coups, il y aura 1 chiffre au moins
+	premier=$(echo "$tous_chiffres" | head -n 1)
+
+	if [ "$nb_chiffres" -ge 2 ]; then
+		# On extraire dernier chiffre pour les deux situations
+		# Soit si nous avons un nombre entre 10 et 99 OU 100 et +, ça revient au même
 		dernier=$(echo "$tous_chiffres" | tail -n 1)
-		echo "$premier $dernier"
 		somme_total=$((somme_total + (premier * 10) + dernier))
-	# 0 et 9 -> on doit multiplier par 11
-	elif [ "$nb_chiffres" -eq 1 ]; then
-		echo "$tous_chiffres"
-		# On doit multiplier par 11 pour doubler le chiffre
-		somme_total=$((somme_total + (tous_chiffres * 11) ))
-	# 10 et 99 -> on additionne directement
+	# Nous avons alors un nombre à un digit, donc on doit le multiplier
 	else
-		premier=$(echo "$tous_chiffres" | head -n 1)
-        deuxieme=$(echo "$tous_chiffres" | tail -n 1)
-        echo "$premier $deuxieme"
-		somme_total=$((somme_total + (premier * 10) + deuxieme))
+        somme_total=$((somme_total + (tous_chiffres * 11) ))
 	fi
     # < On injecte dans l'entrée standard du while, le fichier au complèt pour lire
 done < "$fichier"
