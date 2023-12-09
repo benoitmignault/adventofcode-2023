@@ -5,6 +5,36 @@ function message_erreur_exit(){
     echo "$1" >&2
     exit $2
 }
+
+# Fonction trouver sur reddit
+# -A pour tableau associatif
+declare -A convertion_nombre=(
+    [one]=o1e
+    [two]=t2o
+    [three]=t3e
+    [four]=f4r
+    [five]=f5e
+    [six]=s6x
+    [seven]=s7n
+    [eight]=e8t
+    [nine]=n9n
+)
+
+# Fonction trouver sur reddit
+function replace_mot_chiffre() {
+	# Pour chaque motif de la liste, on va essayer de le trouver sur la ligne et le remplacer
+	# ${!convertion_nombre[@]}" -> affiche la key de la liste
+	# ${convertion_nombre[@]}" -> affiche la value de la liste
+    for value in "${!convertion_nombre[@]}"; do
+    	# Dans la ligne, on trouve la value et on la converti
+    	if [[ "$ligne" =~ $value ]]; then
+    		# variable="${variable//pattern/replacement}"
+    		# // remplace toutes les occurences
+    		ligne="${ligne//$value/${convertion_nombre[$value]}}"
+    		# Les accolades {} sont utilisées pour délimiter la variable à l'intérieur de la chaîne.
+    	fi
+    done
+}
 ###################################################################
  # Début de l'exécution du script
 
@@ -23,6 +53,9 @@ fi
 
 somme_total=0
 while read ligne; do
+
+	# On doit convertir tous les mot en chiffre, s'il y a lieu
+	replace_mot_chiffre
 	# Ça garde seulement les chiffres sur plusieurs lignes
 	tous_chiffres=$(echo "$ligne" | grep -o '[0-9]')
 	nb_chiffres=$(echo "$ligne" | grep -o '[0-9]' | wc -l)
