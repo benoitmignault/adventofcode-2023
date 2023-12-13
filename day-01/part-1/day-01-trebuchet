@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # Elle sera utilisée à chaque fois qu'on aura un message d'erreur
 function message_erreur_exit(){
