@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Fonction qui permet de lire une ligne et retourner une liste de chiffres
+def extraction_chiffres(une_ligne):
+        
+    # Créer une liste vide pour récupérer tous les numéros de la ligne
+    liste_nombres = []
+    
+    # On boucle sur chaque caractère de la ligne
+    for char in une_ligne:                        
+        # On valide que le caractère est un chiffre
+        if char.isdigit():
+            # On ajoute le chiffre à la liste
+            liste_nombres.append(int(char))
+    
+    return liste_nombres
+
+
+# Fonction qui permet de calculer la somme cumullative
+def calculer_somme_cumulative(liste_nombres):
+    
+    # On valide que la liste contient au moins 2 chiffres
+    if len(liste_nombres) >= 2:
+        # On récupère le premier et dernier chiffre
+        premier_chiffre = liste_nombres[0]
+        dernier_chiffre = liste_nombres[-1]        
+        nombre = premier_chiffre * 10 + dernier_chiffre    
+    else:
+        # Nous avons alors un nombre à un digit, donc on doit le multiplier par 11
+        seul_chiffre = liste_nombres[0]
+        nombre = seul_chiffre * 11         
+    
+    return nombre
+
+
+def main():
+    
+    # Ouverture du fichier
+    fichier = open("fichier")
+
+    # La somme des nombres trouvés
+    somme_total = 0
+
+    while True:    
+        # On lit une ligne du fichier
+        une_ligne = fichier.readline()
+            
+        # On valide que la ligne existe et non vide
+        if une_ligne:                
+            # On extrait les chiffres de la ligne
+            liste_nombres = extraction_chiffres(une_ligne)
+            
+            # On calcule la somme cumullative        
+            somme_total += calculer_somme_cumulative(liste_nombres)      
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break  
+
+    # On affiche la somme total
+    print("La somme total est de: ", somme_total)
+
+# Appel de la fonction main
+if __name__ == "__main__":
+    main()
+    
+# Résultat:
+'''
+La somme total est de:  55002
+real    0m0,061s
+user    0m0,041s
+sys     0m0,020s
+'''
