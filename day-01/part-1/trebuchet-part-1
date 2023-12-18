@@ -34,34 +34,41 @@ def calculer_somme_cumulative(liste_nombres):
     return nombre
 
 
-# Ouverture du fichier
-fichier = open("fichier")
+def main():
+    
+    # Ouverture du fichier
+    fichier = open("fichier")
 
-# La somme des nombres trouvés
-somme_total = 0
+    # La somme des nombres trouvés
+    somme_total = 0
 
-while True:    
-    # On lit une ligne du fichier
-    une_ligne = fichier.readline()
-        
-    # On valide que la ligne existe et non vide
-    if une_ligne:                
-        # On extrait les chiffres de la ligne
-        liste_nombres = extraction_chiffres(une_ligne)
-        
-        # On calcule la somme cumullative        
-        somme_total += calculer_somme_cumulative(liste_nombres)      
-    else:
-        # On ferme le fichier et on sort de la boucle
-        fichier.close()
-        break  
+    while True:    
+        # On lit une ligne du fichier
+        une_ligne = fichier.readline()
+            
+        # On valide que la ligne existe et non vide
+        if une_ligne:                
+            # On extrait les chiffres de la ligne
+            liste_nombres = extraction_chiffres(une_ligne)
+            
+            # On calcule la somme cumullative        
+            somme_total += calculer_somme_cumulative(liste_nombres)      
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break  
 
-# On affiche la somme total
-print("La somme total est de: ", somme_total)    
+    # On affiche la somme total
+    print("La somme total est de: ", somme_total)
+
+# Appel de la fonction main
+if __name__ == "__main__":
+    main()
+    
+# Résultat:
 '''
 La somme total est de:  55002
 real    0m0,061s
 user    0m0,041s
 sys     0m0,020s
 '''
-# Fin du script
