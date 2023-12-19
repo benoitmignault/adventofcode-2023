@@ -72,9 +72,5 @@ if __name__ == "__main__":
     
 # Résultat:
 '''
-La somme total est de:  2105
 
-real    0m0,059s
-user    0m0,054s
-sys     0m0,005s
 '''
