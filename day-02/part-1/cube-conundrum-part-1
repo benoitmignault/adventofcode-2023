@@ -1,51 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
-Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-'''
-
-# Fonction qui permet de lire une ligne et retourner une liste de chiffres
-def extraction_chiffres(une_ligne):
-        
-    # Créer une liste vide pour récupérer tous les numéros de la ligne
-    liste_nombres = []
-    
-    # On boucle sur chaque caractère de la ligne
-    for char in une_ligne:                        
-        # On valide que le caractère est un chiffre
-        if char.isdigit():
-            # On ajoute le chiffre à la liste
-            liste_nombres.append(int(char))
-    
-    return liste_nombres
-
-
-# Fonction qui permet de calculer la somme cumullative
-def calculer_somme_cumulative(liste_nombres):
-    
-    # On valide que la liste contient au moins 2 chiffres
-    if len(liste_nombres) >= 2:
-        # On récupère le premier et dernier chiffre
-        premier_chiffre = liste_nombres[0]
-        dernier_chiffre = liste_nombres[-1]        
-        nombre = premier_chiffre * 10 + dernier_chiffre    
-    else:
-        # Nous avons alors un nombre à un digit, donc on doit le multiplier par 11
-        seul_chiffre = liste_nombres[0]
-        nombre = seul_chiffre * 11         
-    
-    return nombre
-
-
 # Déclaration des valeurs maximales pour chaque couleur
 RED = 12
 GREEN = 13
 BLUE = 14
+
+# Fonction pour valider si la game est valide en fonction de chaque sous game
+def valider_game(sous_game):    
+    # Variable de controle pour savoir si la game est valide
+    game_valide = True
+    
+    # On boucle sur chaque sous configuration
+    for configuration in sous_game:
+        # On extrait le chiffre et la couleur
+        chiffre = int(configuration.split(" ")[1])
+        
+        # Extraire la couleur et la mettre en majuscule et enlever les espaces
+        couleur = configuration.split(" ")[2].upper().strip()
+        
+        # On valide que la valeur n'est pas plus grande que la valeur maximale pour chaque type de couleur
+        if (chiffre > RED and couleur == "RED") or (chiffre > GREEN and couleur == "GREEN") or (chiffre > BLUE and couleur == "BLUE"):                    
+            game_valide = False
+            break
+    
+    return game_valide
+
 
 def main():
     
@@ -66,33 +46,15 @@ def main():
             numero_game = une_ligne.split(":")[0].split(" ")[1]
             
             # Conversion des ; en ,
-            une_ligne = une_ligne.replace(";", ",")
-            
-            # Extraire les sous configurations de la ligne qui vient après le ":" et les mettre dans une liste            
-            sous_game = une_ligne.split(":")[1].split(",")
+            sous_game = une_ligne.replace(";", ",").split(":")[1].split(",")            
             
             # Variable de controle pour savoir si la game est valide
-            game_valide = True
-            
-            # On boucle sur chaque sous configuration
-            for configuration in sous_game:
-                # On extrait le chiffre et la couleur
-                chiffre = configuration.split(" ")[1]
-                # Convertir le chiffre en int
-                chiffre = int(chiffre)
-                # Extraire la couleur et la mettre en majuscule et enlever les espaces
-                couleur = configuration.split(" ")[2].upper().strip()
-                #print(chiffre, couleur)
-                
-                # On valide que la valeur n'est pas plus grande que la valeur maximale pour chaque type de couleur
-                if (chiffre > RED and couleur == "RED") or (chiffre > GREEN and couleur == "GREEN") or (chiffre > BLUE and couleur == "BLUE"):                    
-                    game_valide = False
-                    break
+            game_valide = valider_game(sous_game)
             
             # On valide que la game est valide
             if game_valide:
                 # On incrémente la somme total
-                somme_total += int(numero_game)        
+                somme_total += int(numero_game)
             
         else:
             # On ferme le fichier et on sort de la boucle
