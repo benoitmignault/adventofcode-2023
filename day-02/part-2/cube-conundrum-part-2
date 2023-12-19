@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Déclaration des valeurs maximales pour chaque couleur
+RED = 12
+GREEN = 13
+BLUE = 14
+
+# Fonction pour valider si la game est valide en fonction de chaque sous game
+def valider_game(sous_game):    
+    # Variable de controle pour savoir si la game est valide
+    game_valide = True
+    
+    # On boucle sur chaque sous configuration
+    for configuration in sous_game:
+        # On extrait le chiffre et la couleur
+        chiffre = int(configuration.split(" ")[1])
+        
+        # Extraire la couleur et la mettre en majuscule et enlever les espaces
+        couleur = configuration.split(" ")[2].upper().strip()
+        
+        # On valide que la valeur n'est pas plus grande que la valeur maximale pour chaque type de couleur
+        if (chiffre > RED and couleur == "RED") or (chiffre > GREEN and couleur == "GREEN") or (chiffre > BLUE and couleur == "BLUE"):                    
+            game_valide = False
+            break
+    
+    return game_valide
+
+
+def main():
+    
+    # Ouverture du fichier
+    fichier = open("fichier")
+
+    # La somme des id des games jouées
+    somme_total = 0
+
+    while True:    
+        # On lit une ligne du fichier
+        une_ligne = fichier.readline()
+            
+        # On valide que la ligne existe et non vide
+        if une_ligne:               
+            
+            # Extraire le numéro de la game, qui devra être additionner si la game est valide
+            numero_game = une_ligne.split(":")[0].split(" ")[1]
+            
+            # Conversion des ; en ,
+            sous_game = une_ligne.replace(";", ",").split(":")[1].split(",")            
+            
+            # Variable de controle pour savoir si la game est valide
+            game_valide = valider_game(sous_game)
+            
+            # On valide que la game est valide
+            if game_valide:
+                # On incrémente la somme total
+                somme_total += int(numero_game)
+            
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break  
+    
+    fichier.close()
+
+    # On affiche la somme total
+    print("La somme total est de: ", somme_total)
+
+# Appel de la fonction main
+if __name__ == "__main__":
+    main()
+    
+# Résultat:
+'''
+La somme total est de:  2105
+
+real    0m0,059s
+user    0m0,054s
+sys     0m0,005s
+'''
