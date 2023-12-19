@@ -1,10 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Déclaration des valeurs maximales pour chaque couleur
-RED = 12
-GREEN = 13
-BLUE = 14
+import re
+import string
+
+
+# Fonction pour remplir la grille 2D avec un fichier
+def remplir_grille(fichier):
+    # Initialisation d'un tableau 2D pour recevoir des chiffres, avec des signes de ponctuation
+    grille = []
+    
+    while True:    
+        # On lit une ligne du fichier en retirant le retour à la ligne
+        une_ligne = fichier.readline().strip()
+        
+        # On valide que la ligne existe et non vide
+        if une_ligne:            
+            # On ajout la ligne avec chaque caractère dans le tableau 2D, initialiser plus haut
+            grille.append(list(une_ligne))
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break
+    
+    return grille
+
 
 # Fonction pour valider si la game est valide en fonction de chaque sous game
 def valider_game(sous_game):    
