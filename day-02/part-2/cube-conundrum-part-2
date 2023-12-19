@@ -1,30 +1,39 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Déclaration des valeurs maximales pour chaque couleur
-RED = 12
-GREEN = 13
-BLUE = 14
+'''
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+'''
 
-# Fonction pour valider si la game est valide en fonction de chaque sous game
-def valider_game(sous_game):    
-    # Variable de controle pour savoir si la game est valide
-    game_valide = True
+# Fonction pour récupérer les valeurs maximales pour chaque couleur
+def get_valeur_max_couleur(sous_game):
+    # Initialiser les couleurs à 0 sous forme de liste associé à un dictionnaire
+    liste_couleur = {"BLUE": 0, "GREEN": 0, "RED": 0}
     
-    # On boucle sur chaque sous configuration
-    for configuration in sous_game:
-        # On extrait le chiffre et la couleur
-        chiffre = int(configuration.split(" ")[1])
+    # On boucle sur chaque configurations
+    for set_config in sous_game:
+        # Récupère la liste des séquences de chiffre et couleur, séparer par des virgules
+        liste_sequences = set_config.split(",")
         
-        # Extraire la couleur et la mettre en majuscule et enlever les espaces
-        couleur = configuration.split(" ")[2].upper().strip()
-        
-        # On valide que la valeur n'est pas plus grande que la valeur maximale pour chaque type de couleur
-        if (chiffre > RED and couleur == "RED") or (chiffre > GREEN and couleur == "GREEN") or (chiffre > BLUE and couleur == "BLUE"):                    
-            game_valide = False
-            break
+        for sequence_couleur in liste_sequences:                     
+            # Nettoyage de la séquence pour enlever l'espace devant le chiffre
+            sequence = sequence_couleur.strip()
+            
+            # On extrait le chiffre et la couleur
+            chiffre = int(sequence.split(" ")[0])
+            
+            # Extraire la couleur et la mettre en majuscule et enlever les espaces
+            couleur = sequence.split(" ")[1].upper().rstrip()            
+            
+            # On valide que le chiffre est plus grand que la valeur de la couleur
+            if chiffre > liste_couleur[couleur]:
+                liste_couleur[couleur] = chiffre
     
-    return game_valide
+    return liste_couleur
 
 
 def main():
@@ -40,22 +49,15 @@ def main():
         une_ligne = fichier.readline()
             
         # On valide que la ligne existe et non vide
-        if une_ligne:               
+        if une_ligne:
+            # Récupère la liste de sous game
+            sous_game = une_ligne.replace(";", ",").split(":")[1].split(";")
             
-            # Extraire le numéro de la game, qui devra être additionner si la game est valide
-            numero_game = une_ligne.split(":")[0].split(" ")[1]
+            # On récupère la liste des valeurs maximales pour chaque couleur
+            liste_couleur = get_valeur_max_couleur(sous_game)
             
-            # Conversion des ; en ,
-            sous_game = une_ligne.replace(";", ",").split(":")[1].split(",")            
-            
-            # Variable de controle pour savoir si la game est valide
-            game_valide = valider_game(sous_game)
-            
-            # On valide que la game est valide
-            if game_valide:
-                # On incrémente la somme total
-                somme_total += int(numero_game)
-            
+            # On fait le produit des valeurs maximales pour chaque couleur pour l'ajouter à la somme total
+            somme_total += (liste_couleur["BLUE"] * liste_couleur["GREEN"] * liste_couleur["RED"])                        
         else:
             # On ferme le fichier et on sort de la boucle
             fichier.close()
@@ -72,5 +74,9 @@ if __name__ == "__main__":
     
 # Résultat:
 '''
+La somme total est de:  72422
 
+real    0m0,061s
+user    0m0,039s
+sys     0m0,023s
 '''
