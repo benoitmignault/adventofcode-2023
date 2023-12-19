@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Fonction pour récupérer les valeurs maximales pour chaque couleur
+def get_valeur_max_couleur(sous_game):
+    # Initialiser les couleurs à 0 sous forme de liste associé à un dictionnaire
+    liste_couleur = {"BLUE": 0, "GREEN": 0, "RED": 0}
+    
+    # On boucle sur chaque configurations
+    for set_config in sous_game:
+        # Récupère la liste des séquences de chiffre et couleur, séparer par des virgules
+        liste_sequences = set_config.split(",")
+        
+        for sequence_couleur in liste_sequences:                     
+            # Nettoyage de la séquence pour enlever l'espace devant le chiffre
+            sequence = sequence_couleur.strip()
+            
+            # On extrait le chiffre et la couleur
+            chiffre = int(sequence.split(" ")[0])
+            
+            # Extraire la couleur et la mettre en majuscule et enlever les espaces
+            couleur = sequence.split(" ")[1].upper().rstrip()            
+            
+            # On valide que le chiffre est plus grand que la valeur de la couleur
+            if chiffre > liste_couleur[couleur]:
+                liste_couleur[couleur] = chiffre
+    
+    return liste_couleur
+
+
+def main():
+        
+    # Ouverture du fichier
+    fichier = open("fichier")
+
+    # La somme des id des games jouées
+    somme_total = 0
+
+    while True:    
+        # On lit une ligne du fichier
+        une_ligne = fichier.readline()
+            
+        # On valide que la ligne existe et non vide
+        if une_ligne:
+            # Récupère la liste de sous game
+            sous_game = une_ligne.replace(";", ",").split(":")[1].split(";")
+            
+            # On récupère la liste des valeurs maximales pour chaque couleur
+            liste_couleur = get_valeur_max_couleur(sous_game)
+            
+            # On fait le produit des valeurs maximales pour chaque couleur pour l'ajouter à la somme total
+            somme_total += (liste_couleur["BLUE"] * liste_couleur["GREEN"] * liste_couleur["RED"])                        
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break  
+    
+    fichier.close()
+
+    # On affiche la somme total
+    print("La somme total est de: ", somme_total)
+
+# Appel de la fonction main
+if __name__ == "__main__":
+    main()
+    
+# Résultat:
+'''
+La somme total est de:  72422
+
+real    0m0,061s
+user    0m0,039s
+sys     0m0,023s
+'''
