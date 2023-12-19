@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+'''
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+'''
+
 # Fonction qui permet de lire une ligne et retourner une liste de chiffres
 def extraction_chiffres(une_ligne):
         
@@ -34,12 +42,17 @@ def calculer_somme_cumulative(liste_nombres):
     return nombre
 
 
+# Déclaration des valeurs maximales pour chaque couleur
+RED = 12
+GREEN = 13
+BLUE = 14
+
 def main():
     
     # Ouverture du fichier
     fichier = open("fichier")
 
-    # La somme des nombres trouvés
+    # La somme des id des games jouées
     somme_total = 0
 
     while True:    
@@ -47,16 +60,46 @@ def main():
         une_ligne = fichier.readline()
             
         # On valide que la ligne existe et non vide
-        if une_ligne:                
-            # On extrait les chiffres de la ligne
-            liste_nombres = extraction_chiffres(une_ligne)
+        if une_ligne:               
             
-            # On calcule la somme cumullative        
-            somme_total += calculer_somme_cumulative(liste_nombres)      
+            # Extraire le numéro de la game, qui devra être additionner si la game est valide
+            numero_game = une_ligne.split(":")[0].split(" ")[1]
+            
+            # Conversion des ; en ,
+            une_ligne = une_ligne.replace(";", ",")
+            
+            # Extraire les sous configurations de la ligne qui vient après le ":" et les mettre dans une liste            
+            sous_game = une_ligne.split(":")[1].split(",")
+            
+            # Variable de controle pour savoir si la game est valide
+            game_valide = True
+            
+            # On boucle sur chaque sous configuration
+            for configuration in sous_game:
+                # On extrait le chiffre et la couleur
+                chiffre = configuration.split(" ")[1]
+                # Convertir le chiffre en int
+                chiffre = int(chiffre)
+                # Extraire la couleur et la mettre en majuscule et enlever les espaces
+                couleur = configuration.split(" ")[2].upper().strip()
+                #print(chiffre, couleur)
+                
+                # On valide que la valeur n'est pas plus grande que la valeur maximale pour chaque type de couleur
+                if (chiffre > RED and couleur == "RED") or (chiffre > GREEN and couleur == "GREEN") or (chiffre > BLUE and couleur == "BLUE"):                    
+                    game_valide = False
+                    break
+            
+            # On valide que la game est valide
+            if game_valide:
+                # On incrémente la somme total
+                somme_total += int(numero_game)        
+            
         else:
             # On ferme le fichier et on sort de la boucle
             fichier.close()
             break  
+    
+    fichier.close()
 
     # On affiche la somme total
     print("La somme total est de: ", somme_total)
@@ -67,8 +110,9 @@ if __name__ == "__main__":
     
 # Résultat:
 '''
-La somme total est de:  55002
-real    0m0,061s
-user    0m0,041s
-sys     0m0,020s
+La somme total est de:  2105
+
+real    0m0,059s
+user    0m0,054s
+sys     0m0,005s
 '''
