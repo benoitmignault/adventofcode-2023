@@ -47,44 +47,68 @@ def valider_game(sous_game):
     return game_valide
 
 
+
+
+
+
+
 def main():
     
     # Ouverture du fichier
-    fichier = open("fichier")
+    fichier = open("petit-fichier")
 
-    # La somme des id des games jouées
-    somme_total = 0
+    # On rempli la grille 2D avec le fichier
+    grille = remplir_grille(fichier)
 
-    while True:    
-        # On lit une ligne du fichier
-        une_ligne = fichier.readline()
-            
-        # On valide que la ligne existe et non vide
-        if une_ligne:               
-            
-            # Extraire le numéro de la game, qui devra être additionner si la game est valide
-            numero_game = une_ligne.split(":")[0].split(" ")[1]
-            
-            # Conversion des ; en ,
-            sous_game = une_ligne.replace(";", ",").split(":")[1].split(",")            
-            
-            # Variable de controle pour savoir si la game est valide
-            game_valide = valider_game(sous_game)
-            
-            # On valide que la game est valide
-            if game_valide:
-                # On incrémente la somme total
-                somme_total += int(numero_game)
-            
-        else:
-            # On ferme le fichier et on sort de la boucle
-            fichier.close()
-            break  
+    # Afficher le tableau 2D
+    #for ligne in grille:
+    #    print(ligne)
     
-    fichier.close()
+    # Besoin d'aller chercher un point précis dans le tableau
+    #print(grille[0][0])
+    
+    # Besoin de connaitre le nombre de colonne et de ligne du tableau
+    nb_colonne = len(grille[0])
+    nb_ligne = len(grille)
+    #print(nb_colonne, nb_ligne)
+    #print(grille[nb_ligne-1][nb_colonne-1])
+    
+    pattern = re.compile(r"[;:,.!?]")
+    
+    # On doit itérer la grille pour trouver les signes de ponctuations et faire des actions rendu là
+    for ligne in range(nb_ligne):
+        # On doit itérer sur les colonnes
+        for colonne in range(nb_colonne):
+            # On doit valider si c'est un signe de ponctuation
+            if grille[ligne][colonne] in string.punctuation and grille[ligne][colonne] != ".":
+                print(f"Caractère de ponctuation détecté : {grille[ligne][colonne]}")
+
+            #if grille[ligne][colonne] == ";":
+                # On doit extraire la game
+                # On doit valider si la game est valide
+                # On doit additionner le numéro de la game à la somme total
+            #    pass
+    
+    # Comment créer un patern avec tous les signes de ponctuations
+    
+    
+    # Extraire le numéro de la game, qui devra être additionner si la game est valide
+    #numero_game = une_ligne.split(":")[0].split(" ")[1]
+    
+    # Conversion des ; en ,
+    #sous_game = une_ligne.replace(";", ",").split(":")[1].split(",")            
+    
+    # Variable de controle pour savoir si la game est valide
+    #game_valide = valider_game(sous_game)
+    
+    # On valide que la game est valide
+    #if game_valide:
+        # On incrémente la somme total
+    #    somme_total += int(numero_game)
+
 
     # On affiche la somme total
-    print("La somme total est de: ", somme_total)
+    #print("La somme total est de: ", somme_total)
 
 # Appel de la fonction main
 if __name__ == "__main__":
