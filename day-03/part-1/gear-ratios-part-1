@@ -63,16 +63,16 @@ def main():
                         print(chiffre)
                 
                 # On vérifi qu'on peut aller à gauche pour commencer
-                if y - 1 >= 0:
+                if y > 0:
                     # Valide un début de chiffre à gauche              
                     if grille[x][y - 1].isdigit():
                         chiffre = ""
                         # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
-                        for yy in range(y - 1, 0, -1):
-                            if grille[x][yy] == ".":
+                        for yy in range(y, 0, -1):
+                            if grille[x][yy - 1] == ".":
                                 break
                             else:
-                                chiffre += grille[x][yy]
+                                chiffre += grille[x][yy - 1]
                         # On doit inverser le chiffre
                         chiffre = chiffre[::-1]
                         # Convertion du chiffre en entier
@@ -128,7 +128,7 @@ def main():
                             somme_total += int(chiffre)
                             print(chiffre)
                         # On vérifi qu'on n'a pas de nombre à gauche  
-                        elif y - 1 >= 0 and grille[x + 1][y - 1] == ".":
+                        elif y > 0 and grille[x + 1][y - 1] == ".":
                             chiffre = ""
                             # On extrait les chiffres en bas vers la droite
                             for yy in range(y, nb_colonne):
@@ -147,7 +147,7 @@ def main():
                             print(chiffre)                            
                         
                 # On vérifi qu'on peut aller en haut maintenant
-                if x - 1 >= 0:
+                if x > 0:
                     # Valide qu'on n'a pas de chiffre en haut, mais peut-être en haut à gauche ou à droite         
                     if grille[x - 1][y] == ".":
                         # On est un étage plus bas (+1)
@@ -165,7 +165,7 @@ def main():
                             print(chiffre)
                         
                         # On vérifi qu'on peut aller à gauche et vérifier les chiffres
-                        if y - 1 >= 0 and grille[x - 1][y - 1].isdigit():
+                        if y > 0 and grille[x - 1][y - 1].isdigit():
                             chiffre = ""
                             # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
                             # range(start, stop, step)
@@ -194,9 +194,8 @@ def main():
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
                             print(chiffre)
-                            pause = input("pause")
                         # On vérifi qu'on n'a pas de nombre à gauche  
-                        elif y - 1 >= 0 and grille[x - 1][y - 1] == ".":
+                        elif y > 0 and grille[x - 1][y - 1] == ".":
                             chiffre = ""
                             # On extrait les chiffres en bas vers la droite
                             for yy in range(y, nb_colonne):
@@ -207,7 +206,7 @@ def main():
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
                             print(chiffre)
-                        elif y - 1 >= 0 and y + 1 < nb_colonne:
+                        elif y > 0 and y + 1 < nb_colonne:
                             # On extrait les chiffres en haut, un pas à gauche et un pas à droite vers la gauche
                             chiffre = grille[x - 1][y - 1] + grille[x - 1][y] + grille[x - 1][y + 1]
                             chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points                        
