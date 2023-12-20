@@ -70,23 +70,58 @@ def main():
     nb_colonne = len(grille[0])
     nb_ligne = len(grille)
     #print(nb_colonne, nb_ligne)
-    #print(grille[nb_ligne-1][nb_colonne-1])
-    
-    pattern = re.compile(r"[;:,.!?]")
+    #print(grille[nb_ligne-1][nb_colonne-1])    
     
     # On doit itérer la grille pour trouver les signes de ponctuations et faire des actions rendu là
-    for ligne in range(nb_ligne):
+    for x in range(nb_ligne):
         # On doit itérer sur les colonnes
-        for colonne in range(nb_colonne):
+        for y in range(nb_colonne):
             # On doit valider si c'est un signe de ponctuation
-            if grille[ligne][colonne] in string.punctuation and grille[ligne][colonne] != ".":
-                print(f"Caractère de ponctuation détecté : {grille[ligne][colonne]}")
+            if grille[x][y] in string.punctuation and grille[x][y] != ".":
+                print("Signe de ponctuation trouvé: ", grille[x][y])           
+                # Vérifier si les indices sont dans les limites du tableau
+                # On vérifi qu'on peut aller à droit et en bas
+                if y + 1 < nb_colonne and x + 1 < nb_ligne:
+                    # Valide un début de chiffre à droite              
+                    if grille[x][y + 1].isdigit():
+                        print("Game détecté")
+                        
+                    # Valide un début de chiffre en bas       
+                    if grille[x + 1][y].isdigit():
+                        print("Game détecté")
+                    
+                    # Valide un début de chiffre en bas à droite
+                    if grille[x + 1][y + 1].isdigit():
+                        print("Game détecté")
+                
+                # On vérifi qu'on peut aller à gauche et en haut
+                if y - 1 >= 0 and x - 1 >= 0:
+                    # Valide un début de chiffre à gauche              
+                    if grille[x][y - 1].isdigit():
+                        print("Game détecté")
+                        
+                    # Valide un début de chiffre en haut       
+                    if grille[x - 1][y].isdigit():
+                        print("Game détecté")
+                    
+                    # Valide un début de chiffre en haut à gauche
+                    if grille[x - 1][y - 1].isdigit():
+                        print("Game détecté")
+                        
+                # On vérifi qu'on peut aller à gauche et en bas
+                if y - 1 >= 0 and x + 1 < nb_ligne:                    
+                    # Valide un début de chiffre en bas à gauche
+                    if grille[x + 1][y - 1].isdigit():
+                        print("Game détecté")
+                
+                # On vérifi qu'on peut aller à droite et en haut
+                if y + 1 < nb_colonne and x - 1 >= 0:                    
+                    # Valide un début de chiffre en haut à droite
+                    if grille[x - 1][y + 1].isdigit():
+                        print("Game détecté")
+                                
+                          
 
-            #if grille[ligne][colonne] == ";":
-                # On doit extraire la game
-                # On doit valider si la game est valide
-                # On doit additionner le numéro de la game à la somme total
-            #    pass
     
     # Comment créer un patern avec tous les signes de ponctuations
     
