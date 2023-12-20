@@ -46,7 +46,7 @@ def main():
         for y in range(nb_colonne):
             # On doit valider si c'est un signe de ponctuation
             if grille[x][y] in string.punctuation and grille[x][y] != ".":
-                
+                print("Signe de ponctuation: ", grille[x][y])
                 # On vérifi qu'on peut aller à droit pour commencer
                 if y + 1 < nb_colonne:
                     # Valide un début de chiffre à droite              
@@ -169,11 +169,11 @@ def main():
                             chiffre = ""
                             # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
                             # range(start, stop, step)
-                            for yy in range(y - 1, 0, -1):
-                                if grille[x - 1][yy] == ".":
+                            for yy in range(y, 0, -1):
+                                if grille[x - 1][yy -1] == ".":
                                     break
                                 else:
-                                    chiffre += grille[x - 1][yy]
+                                    chiffre += grille[x - 1][yy -1]
                             # On doit inverser le premier et le dernier chiffre
                             chiffre = chiffre[::-1]
                             # Convertion du chiffre en entier
@@ -184,7 +184,7 @@ def main():
                         if y + 1 < nb_colonne and grille[x - 1][y + 1] == ".":
                             chiffre = ""
                             # On extrait les chiffres en haut vers la gauche
-                            for yy in range(y, 0, -1):
+                            for yy in range(y, 0, -1):                                
                                 if grille[x - 1][yy] == ".":
                                     break
                                 else:
@@ -194,6 +194,7 @@ def main():
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
                             print(chiffre)
+                            pause = input("pause")
                         # On vérifi qu'on n'a pas de nombre à gauche  
                         elif y - 1 >= 0 and grille[x - 1][y - 1] == ".":
                             chiffre = ""
