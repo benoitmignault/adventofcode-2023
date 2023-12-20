@@ -28,7 +28,7 @@ def remplir_grille(fichier):
 def main():
     
     # Ouverture du fichier
-    fichier = open("petit-fichier")
+    fichier = open("fichier")
 
     # On rempli la grille 2D avec le fichier
     grille = remplir_grille(fichier)
@@ -46,7 +46,23 @@ def main():
         for y in range(nb_colonne):
             # On doit valider si c'est un signe de ponctuation
             if grille[x][y] in string.punctuation and grille[x][y] != ".":
-                print("Signe de ponctuation: ", grille[x][y])
+                # On vérifi qu'on peut aller à gauche pour commencer
+                if y > 0:
+                    # Valide un début de chiffre à gauche              
+                    if grille[x][y - 1].isdigit():
+                        chiffre = ""
+                        # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
+                        # ??????? si je met y - 1 dans le range et yy dans grille[x][yy] ça ne fonctionne pas
+                        for yy in range(y, 0, -1):
+                            if grille[x][yy - 1] == ".":
+                                break
+                            else:
+                                chiffre += grille[x][yy - 1]
+                        # On doit inverser le chiffre
+                        chiffre = chiffre[::-1]
+                        # Convertion du chiffre en entier
+                        somme_total += int(chiffre)
+                
                 # On vérifi qu'on peut aller à droit pour commencer
                 if y + 1 < nb_colonne:
                     # Valide un début de chiffre à droite              
@@ -57,27 +73,9 @@ def main():
                             if grille[x][yy] == ".":
                                 break
                             else:
-                                chiffre += grille[x][yy]
+                                chiffre += grille[x][yy]                        
                         # Convertion du chiffre en entier
-                        somme_total += int(chiffre)
-                        print(chiffre)
-                
-                # On vérifi qu'on peut aller à gauche pour commencer
-                if y > 0:
-                    # Valide un début de chiffre à gauche              
-                    if grille[x][y - 1].isdigit():
-                        chiffre = ""
-                        # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
-                        for yy in range(y, 0, -1):
-                            if grille[x][yy - 1] == ".":
-                                break
-                            else:
-                                chiffre += grille[x][yy - 1]
-                        # On doit inverser le chiffre
-                        chiffre = chiffre[::-1]
-                        # Convertion du chiffre en entier
-                        somme_total += int(chiffre)
-                        print(chiffre)
+                        somme_total += int(chiffre)           
                 
                 # On vérifi qu'on peut aller en bas pour commencer
                 if x + 1 < nb_ligne:
@@ -88,30 +86,28 @@ def main():
                         if y + 1 < nb_colonne and grille[x + 1][y + 1].isdigit():
                             chiffre = ""
                             # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
-                            for yy in range(y + 1, nb_colonne):
-                                if grille[x + 1][yy] == ".":
+                            for yy in range(y, nb_colonne):
+                                if grille[x + 1][yy + 1] == ".":
                                     break
                                 else:
-                                    chiffre += grille[x + 1][yy]
+                                    chiffre += grille[x + 1][yy + 1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
                         
                         # On vérifi qu'on peut aller à gauche et vérifier les chiffres
-                        if y - 1 >= 0 and grille[x + 1][y - 1].isdigit():
+                        if y > 0 and grille[x + 1][y - 1].isdigit():
                             chiffre = ""
                             # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
                             # range(start, stop, step)
-                            for yy in range(y - 1, 0, -1):
-                                if grille[x + 1][yy] == ".":
+                            for yy in range(y, 0, -1):
+                                if grille[x + 1][yy - 1] == ".":
                                     break
                                 else:
-                                    chiffre += grille[x + 1][yy]
+                                    chiffre += grille[x + 1][yy - 1]
                             # On doit inverser le chiffre
                             chiffre = chiffre[::-1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
                     else:
                         # On vérifi qu'on n'a pas de nombre à droite
                         if y + 1 < nb_colonne and grille[x + 1][y + 1] == ".":
@@ -126,7 +122,7 @@ def main():
                             chiffre = chiffre[::-1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
+                                                        
                         # On vérifi qu'on n'a pas de nombre à gauche  
                         elif y > 0 and grille[x + 1][y - 1] == ".":
                             chiffre = ""
@@ -138,13 +134,13 @@ def main():
                                     chiffre += grille[x + 1][yy]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
-                        elif y - 1 >= 0 and y + 1 < nb_colonne:
+                            
+                        elif y > 0 and y + 1 < nb_colonne:
+                            chiffre = ""
                             # On extrait les chiffres en bas, un pas à gauche et un pas à droite vers la gauche
                             chiffre = grille[x + 1][y - 1] + grille[x + 1][y] + grille[x + 1][y + 1]
                             chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points                        
-                            somme_total += int(chiffre)
-                            print(chiffre)                            
+                            somme_total += int(chiffre)                 
                         
                 # On vérifi qu'on peut aller en haut maintenant
                 if x > 0:
@@ -155,14 +151,13 @@ def main():
                         if y + 1 < nb_colonne and grille[x - 1][y + 1].isdigit():
                             chiffre = ""
                             # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
-                            for yy in range(y + 1, nb_colonne):
-                                if grille[x - 1][yy] == ".":
+                            for yy in range(y, nb_colonne):
+                                if grille[x - 1][yy + 1] == ".":
                                     break
                                 else:
-                                    chiffre += grille[x - 1][yy]
+                                    chiffre += grille[x - 1][yy + 1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
                         
                         # On vérifi qu'on peut aller à gauche et vérifier les chiffres
                         if y > 0 and grille[x - 1][y - 1].isdigit():
@@ -178,7 +173,6 @@ def main():
                             chiffre = chiffre[::-1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
                     else:
                         # On vérifi qu'on n'a pas de nombre à droite
                         if y + 1 < nb_colonne and grille[x - 1][y + 1] == ".":
@@ -193,7 +187,7 @@ def main():
                             chiffre = chiffre[::-1]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
+                            
                         # On vérifi qu'on n'a pas de nombre à gauche  
                         elif y > 0 and grille[x - 1][y - 1] == ".":
                             chiffre = ""
@@ -205,13 +199,13 @@ def main():
                                     chiffre += grille[x - 1][yy]
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
-                            print(chiffre)
+                            
                         elif y > 0 and y + 1 < nb_colonne:
+                            chiffre = ""
                             # On extrait les chiffres en haut, un pas à gauche et un pas à droite vers la gauche
                             chiffre = grille[x - 1][y - 1] + grille[x - 1][y] + grille[x - 1][y + 1]
                             chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points                        
                             somme_total += int(chiffre)
-                            print(chiffre) 
                             
     # On affiche la somme total
     print("La somme total est de: ", somme_total)
@@ -222,9 +216,9 @@ if __name__ == "__main__":
     
 # Résultat:
 '''
-La somme total est de:  2105
+La somme total est de:  539637
 
-real    0m0,059s
-user    0m0,054s
-sys     0m0,005s
+real	0m0,095s
+user	0m0,067s
+sys	    0m0,028s
 '''
