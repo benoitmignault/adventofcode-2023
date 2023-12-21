@@ -37,14 +37,24 @@ def recuperer_chiffre_droite_gauche(grille, x, y):
             break
         else:
             chiffre += grille[x][yy - 1]
-    # On inverse le chiffre et on le converti en integer et on le retourne
-    
+            
+    # On inverse le chiffre et on le converti en integer et on le retourne    
     return int(chiffre[::-1])
 
 
 # Récupérer les chiffres pour faire le nombre de gauche à droite
-def recuperer_chiffre_gauche_droite(grille, x, y):
-    print("x: ", x, "y: ", y)
+def recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne):
+    chiffre = ""
+    # On se déplace de 1 vers la droite pour commencer
+    for yy in range(y + 1, nb_colonne):
+        print("yy: ", yy)
+        if grille[x][yy] == ".":
+            break
+        else:
+            chiffre += grille[x][yy]  
+                                  
+    # Convertion du chiffre en entier  
+    return int(chiffre) 
     
 
 # Récupérer les chiffres endessous ou en haut du signe de ponctuation
@@ -83,16 +93,7 @@ def main():
                 if y + 1 < nb_colonne:
                     # Valide un début de chiffre à droite              
                     if grille[x][y + 1].isdigit():
-                        chiffre = ""
-                        # On se déplace de 1 vers la droite pour commencer
-                        for yy in range(y + 1, nb_colonne):
-                            print("yy: ", yy)
-                            if grille[x][yy] == ".":
-                                break
-                            else:
-                                chiffre += grille[x][yy]                        
-                        # Convertion du chiffre en entier
-                        somme_total += int(chiffre)           
+                        somme_total += recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne)     
                 
                 # On vérifi qu'on peut aller en bas pour commencer
                 if x + 1 < nb_ligne:
