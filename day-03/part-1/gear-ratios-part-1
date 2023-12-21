@@ -25,6 +25,33 @@ def remplir_grille(fichier):
     return grille
 
 
+# Récupérer les chiffres pour faire le nombre de droite à gauche
+def recuperer_chiffre_droite_gauche(grille, x, y):    
+    chiffre = ""
+    # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
+    # Le Y ne change pas, c'est YY qui change
+    # On ne peut pas aller à gauche si on est à la colonne 0
+    for yy in range(y, 0, -1):
+        print("yy: ", yy)
+        if grille[x][yy - 1] == ".":
+            break
+        else:
+            chiffre += grille[x][yy - 1]
+    # On inverse le chiffre et on le converti en integer et on le retourne
+    
+    return int(chiffre[::-1])
+
+
+# Récupérer les chiffres pour faire le nombre de gauche à droite
+def recuperer_chiffre_gauche_droite(grille, x, y):
+    print("x: ", x, "y: ", y)
+    
+
+# Récupérer les chiffres endessous ou en haut du signe de ponctuation
+def recuperer_chiffre_endessous_enhaut(grille, x, y):
+    print("x: ", x, "y: ", y)
+    
+
 def main():
     
     # Ouverture du fichier
@@ -49,27 +76,17 @@ def main():
                 # On vérifi qu'on peut aller à gauche pour commencer
                 if y > 0:
                     # Valide un début de chiffre à gauche              
-                    if grille[x][y - 1].isdigit():
-                        chiffre = ""
-                        # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
-                        # ??????? si je met y - 1 dans le range et yy dans grille[x][yy] ça ne fonctionne pas
-                        for yy in range(y, 0, -1):
-                            if grille[x][yy - 1] == ".":
-                                break
-                            else:
-                                chiffre += grille[x][yy - 1]
-                        # On doit inverser le chiffre
-                        chiffre = chiffre[::-1]
-                        # Convertion du chiffre en entier
-                        somme_total += int(chiffre)
+                    if grille[x][y - 1].isdigit():                        
+                        somme_total += recuperer_chiffre_droite_gauche(grille, x, y)
                 
                 # On vérifi qu'on peut aller à droit pour commencer
                 if y + 1 < nb_colonne:
                     # Valide un début de chiffre à droite              
                     if grille[x][y + 1].isdigit():
                         chiffre = ""
-                        # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
+                        # On se déplace de 1 vers la droite pour commencer
                         for yy in range(y + 1, nb_colonne):
+                            print("yy: ", yy)
                             if grille[x][yy] == ".":
                                 break
                             else:
