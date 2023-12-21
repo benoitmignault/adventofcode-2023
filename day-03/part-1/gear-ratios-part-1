@@ -115,30 +115,14 @@ def main():
                                                         
                     else:
                         # On vérifi qu'on n'a pas de nombre à droite
-                        if y + 1 < nb_colonne and grille[x + 1][y + 1] == ".":
-                            chiffre = ""
-                            # On extrait les chiffres en bas vers la gauche
-                            for yy in range(y, 0, -1):
-                                if grille[x + 1][yy] == ".":
-                                    break
-                                else:
-                                    chiffre += grille[x + 1][yy]
-                            # On doit inverser le chiffre
-                            chiffre = chiffre[::-1]
-                            # Convertion du chiffre en entier
-                            somme_total += int(chiffre)
+                        if y + 1 < nb_colonne and grille[x + 1][y + 1] == ".":                            
+                            somme_total += recuperer_chiffre_droite_gauche(grille, x + 1,y + 1)
                                                         
                         # On vérifi qu'on n'a pas de nombre à gauche  
                         elif y > 0 and grille[x + 1][y - 1] == ".":
-                            chiffre = ""
-                            # On extrait les chiffres en bas vers la droite
-                            for yy in range(y, nb_colonne):
-                                if grille[x + 1][yy] == ".":
-                                    break
-                                else:
-                                    chiffre += grille[x + 1][yy]
-                            # Convertion du chiffre en entier
-                            somme_total += int(chiffre)
+                            # ON doit faire y -1 pour compenser le y + 1 de la fct
+                            # pour au final partir à la même colone du point de ponctuation                        
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x + 1, y - 1, nb_colonne)
                             
                         elif y > 0 and y + 1 < nb_colonne:                            
                             somme_total += recuperer_chiffre_endessous_enhaut(grille, x + 1, y)              
@@ -172,16 +156,10 @@ def main():
                             somme_total += int(chiffre)
                             
                         # On vérifi qu'on n'a pas de nombre à gauche  
-                        elif y > 0 and grille[x - 1][y - 1] == ".":
-                            chiffre = ""
-                            # On extrait les chiffres en bas vers la droite
-                            for yy in range(y, nb_colonne):
-                                if grille[x - 1][yy] == ".":
-                                    break
-                                else:
-                                    chiffre += grille[x - 1][yy]
-                            # Convertion du chiffre en entier
-                            somme_total += int(chiffre)
+                        elif y > 0 and grille[x - 1][y - 1] == ".":                            
+                            # On doit faire y - 1 pour compenser le y + 1 de la fct
+                            # pour au final partir à la même colone du point de ponctuation                        
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x - 1, y - 1, nb_colonne)
                             
                         elif y > 0 and y + 1 < nb_colonne:
                             somme_total += recuperer_chiffre_endessous_enhaut(grille, x - 1, y)   
