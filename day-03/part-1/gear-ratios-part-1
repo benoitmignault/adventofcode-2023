@@ -26,13 +26,12 @@ def remplir_grille(fichier):
 
 
 # Récupérer les chiffres pour faire le nombre de droite à gauche
-def recuperer_chiffre_droite_gauche(grille, x, y):    
+def recuperer_chiffre_droite_gauche(grille, x, y):
     chiffre = ""
     # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
     # Le Y ne change pas, c'est YY qui change
     # On ne peut pas aller à gauche si on est à la colonne 0
     for yy in range(y, 0, -1):
-        print("yy: ", yy)
         if grille[x][yy - 1] == ".":
             break
         else:
@@ -47,7 +46,6 @@ def recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne):
     chiffre = ""
     # On se déplace de 1 vers la droite pour commencer
     for yy in range(y + 1, nb_colonne):
-        print("yy: ", yy)
         if grille[x][yy] == ".":
             break
         else:
@@ -58,7 +56,7 @@ def recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne):
     
 
 # Récupérer les chiffres endessous ou en haut du signe de ponctuation
-def recuperer_chiffre_endessous_enhaut(grille, x, y):    
+def recuperer_chiffre_endessous_enhaut(grille, x, y):
     # On extrait les chiffres en bas, un pas à gauche et un pas à droite vers la gauche
     chiffre = grille[x][y - 1] + grille[x][y] + grille[x][y + 1]
     chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points
@@ -165,7 +163,7 @@ if __name__ == "__main__":
 '''
 La somme total est de:  539637
 
-real	0m0,095s
-user	0m0,067s
-sys	    0m0,028s
+real	0m0,093s
+user	0m0,076s
+sys	    0m0,016s
 '''
