@@ -58,8 +58,13 @@ def recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne):
     
 
 # Récupérer les chiffres endessous ou en haut du signe de ponctuation
-def recuperer_chiffre_endessous_enhaut(grille, x, y):
-    print("x: ", x, "y: ", y)
+def recuperer_chiffre_endessous_enhaut(grille, x, y):    
+    # On extrait les chiffres en bas, un pas à gauche et un pas à droite vers la gauche
+    chiffre = grille[x][y - 1] + grille[x][y] + grille[x][y + 1]
+    chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points
+    
+    # Convertion du chiffre en entier  
+    return int(chiffre) 
     
 
 def main():
@@ -135,12 +140,8 @@ def main():
                             # Convertion du chiffre en entier
                             somme_total += int(chiffre)
                             
-                        elif y > 0 and y + 1 < nb_colonne:
-                            chiffre = ""
-                            # On extrait les chiffres en bas, un pas à gauche et un pas à droite vers la gauche
-                            chiffre = grille[x + 1][y - 1] + grille[x + 1][y] + grille[x + 1][y + 1]
-                            chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points                        
-                            somme_total += int(chiffre)                 
+                        elif y > 0 and y + 1 < nb_colonne:                            
+                            somme_total += recuperer_chiffre_endessous_enhaut(grille, x + 1, y)              
                         
                 # On vérifi qu'on peut aller en haut maintenant
                 if x > 0:
@@ -183,11 +184,7 @@ def main():
                             somme_total += int(chiffre)
                             
                         elif y > 0 and y + 1 < nb_colonne:
-                            chiffre = ""
-                            # On extrait les chiffres en haut, un pas à gauche et un pas à droite vers la gauche
-                            chiffre = grille[x - 1][y - 1] + grille[x - 1][y] + grille[x - 1][y + 1]
-                            chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points                        
-                            somme_total += int(chiffre)
+                            somme_total += recuperer_chiffre_endessous_enhaut(grille, x - 1, y)   
                             
     # On affiche la somme total
     print("La somme total est de: ", somme_total)
