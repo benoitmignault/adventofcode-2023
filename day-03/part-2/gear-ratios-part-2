@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import string
+
+
+# Fonction pour remplir la grille 2D avec un fichier
+def remplir_grille(fichier):
+    # Initialisation d'un tableau 2D pour recevoir des chiffres, avec des signes de ponctuation
+    grille = []
+    
+    while True:    
+        # On lit une ligne du fichier en retirant le retour à la ligne
+        une_ligne = fichier.readline().strip()
+        
+        # On valide que la ligne existe et non vide
+        if une_ligne:            
+            # On ajout la ligne avec chaque caractère dans le tableau 2D, initialiser plus haut
+            grille.append(list(une_ligne))
+        else:
+            # On ferme le fichier et on sort de la boucle
+            fichier.close()
+            break
+    
+    return grille
+
+
+# Récupérer les chiffres pour faire le nombre de droite à gauche
+def recuperer_chiffre_droite_gauche(grille, x, y):
+    chiffre = ""
+    # On extrait les chiffres jusqu'à ce qu'on tombe sur un point.
+    # Le Y ne change pas, c'est YY qui change
+    # On ne peut pas aller à gauche si on est à la colonne 0
+    for yy in range(y, 0, -1):
+        if grille[x][yy - 1] == ".":
+            break
+        else:
+            chiffre += grille[x][yy - 1]
+            
+    # On inverse le chiffre et on le converti en integer et on le retourne    
+    return int(chiffre[::-1])
+
+
+# Récupérer les chiffres pour faire le nombre de gauche à droite
+def recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne):
+    chiffre = ""
+    # On se déplace de 1 vers la droite pour commencer
+    for yy in range(y + 1, nb_colonne):
+        if grille[x][yy] == ".":
+            break
+        else:
+            chiffre += grille[x][yy]  
+                                  
+    # Convertion du chiffre en entier  
+    return int(chiffre) 
+    
+
+# Récupérer les chiffres endessous ou en haut du signe de ponctuation
+def recuperer_chiffre_endessous_enhaut(grille, x, y):
+    # On extrait les chiffres en bas, un pas à gauche et un pas à droite vers la gauche
+    chiffre = grille[x][y - 1] + grille[x][y] + grille[x][y + 1]
+    chiffre = chiffre.replace(".", "") # C'est possible jusqu'à deux points
+    
+    # Convertion du chiffre en entier  
+    return int(chiffre) 
+    
+
+def main():
+    
+    # Ouverture du fichier
+    fichier = open("fichier")
+
+    # On rempli la grille 2D avec le fichier
+    grille = remplir_grille(fichier)
+    
+    # Besoin de connaitre le nombre de colonne et de ligne du tableau
+    nb_colonne = len(grille[0])
+    nb_ligne = len(grille)
+    
+    # Somme des parties du moteur
+    somme_total = 0
+    
+    # On doit itérer la grille pour trouver les signes de ponctuations et faire des actions rendu là
+    for x in range(nb_ligne):
+        # On doit itérer sur les colonnes
+        for y in range(nb_colonne):
+            # On doit valider si c'est un signe de ponctuation
+            if grille[x][y] in string.punctuation and grille[x][y] != ".":
+                # On vérifi qu'on peut aller à gauche pour commencer
+                if y > 0:
+                    # Valide un début de chiffre à gauche              
+                    if grille[x][y - 1].isdigit():                        
+                        somme_total += recuperer_chiffre_droite_gauche(grille, x, y)
+                
+                # On vérifi qu'on peut aller à droit pour commencer
+                if y + 1 < nb_colonne:
+                    # Valide un début de chiffre à droite              
+                    if grille[x][y + 1].isdigit():
+                        somme_total += recuperer_chiffre_gauche_droite(grille, x, y, nb_colonne)     
+                
+                # On vérifi qu'on peut aller en bas pour commencer
+                if x + 1 < nb_ligne:
+                    # Valide qu'on n'a pas de chiffre en bas, mais peut-être en bas à gauche ou à droite         
+                    if grille[x + 1][y] == ".":
+                        # On est un étage plus bas (+1)
+                        # On vérifi qu'on peut aller à droit et vérifier les chiffres
+                        if y + 1 < nb_colonne and grille[x + 1][y + 1].isdigit():                            
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x + 1, y, nb_colonne)
+                        
+                        # On vérifi qu'on peut aller à gauche et vérifier les chiffres
+                        if y > 0 and grille[x + 1][y - 1].isdigit():                            
+                            somme_total += recuperer_chiffre_droite_gauche(grille, x + 1, y)
+                                                        
+                    else:
+                        # On vérifi qu'on n'a pas de nombre à droite
+                        if y + 1 < nb_colonne and grille[x + 1][y + 1] == ".":                            
+                            somme_total += recuperer_chiffre_droite_gauche(grille, x + 1, y + 1)
+                                                        
+                        # On vérifi qu'on n'a pas de nombre à gauche  
+                        elif y > 0 and grille[x + 1][y - 1] == ".":
+                            # ON doit faire y -1 pour compenser le y + 1 de la fct
+                            # pour au final partir à la même colone du point de ponctuation                        
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x + 1, y - 1, nb_colonne)
+                            
+                        elif y > 0 and y + 1 < nb_colonne:                            
+                            somme_total += recuperer_chiffre_endessous_enhaut(grille, x + 1, y)              
+                        
+                # On vérifi qu'on peut aller en haut maintenant
+                if x > 0:
+                    # Valide qu'on n'a pas de chiffre en haut, mais peut-être en haut à gauche ou à droite         
+                    if grille[x - 1][y] == ".":
+                        # On est un étage plus bas (+1)
+                        # On vérifi qu'on peut aller à droit et vérifier les chiffres
+                        if y + 1 < nb_colonne and grille[x - 1][y + 1].isdigit():                            
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x - 1, y, nb_colonne)
+                        
+                        # On vérifi qu'on peut aller à gauche et vérifier les chiffres
+                        if y > 0 and grille[x - 1][y - 1].isdigit():                            
+                            somme_total += recuperer_chiffre_droite_gauche(grille, x - 1,y)
+                                                        
+                    else:
+                        # On vérifi qu'on n'a pas de nombre à droite
+                        if y + 1 < nb_colonne and grille[x - 1][y + 1] == ".":                            
+                            somme_total += recuperer_chiffre_droite_gauche(grille, x - 1,y + 1)
+                            
+                        # On vérifi qu'on n'a pas de nombre à gauche  
+                        elif y > 0 and grille[x - 1][y - 1] == ".":                            
+                            # On doit faire y - 1 pour compenser le y + 1 de la fct
+                            # pour au final partir à la même colone du point de ponctuation                        
+                            somme_total += recuperer_chiffre_gauche_droite(grille, x - 1, y - 1, nb_colonne)
+                            
+                        elif y > 0 and y + 1 < nb_colonne:
+                            somme_total += recuperer_chiffre_endessous_enhaut(grille, x - 1, y)   
+                            
+    # On affiche la somme total
+    print("La somme total est de: ", somme_total)
+
+# Appel de la fonction main
+if __name__ == "__main__":
+    main()
+    
+# Résultat:
+'''
+La somme total est de:  539637
+
+real	0m0,093s
+user	0m0,076s
+sys	    0m0,016s
+'''
